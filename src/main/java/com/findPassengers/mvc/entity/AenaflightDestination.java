@@ -11,10 +11,10 @@ import java.util.Date;
 public class AenaflightDestination implements Serializable {
 
     @Id
-    @SequenceGenerator(name="SEQUENCE_GENERATOR",  sequenceName="aenaflight_source_id_seq"  )
+    @SequenceGenerator(name="SEQUENCE_GENERATOR",  sequenceName="aenaflight_source_id_seq", initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQUENCE_GENERATOR")
     @Column(name = "id")
-    private BigInteger id;
+    private Long id;
 
     @Column(name = "adep", length = 8, nullable = false)
     private String adep;
@@ -86,11 +86,11 @@ public class AenaflightDestination implements Serializable {
     private Date created_at;
 
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

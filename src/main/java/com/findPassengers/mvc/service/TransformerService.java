@@ -2,7 +2,7 @@ package com.findPassengers.mvc.service;
 
 import com.findPassengers.mvc.entity.*;
 import com.findPassengers.mvc.repository.*;
-import org.apache.tomcat.util.buf.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +24,11 @@ public class TransformerService {
     private GroupsToTransformRepository groupsToTransformRepository;
 
     public void work(){
-        List<GroupToTransform> groups = groupsToTransformRepository.findTop1000By();
-        processGroups(groups);
+        List<GroupToTransform> groups;
+        do {
+            groups = groupsToTransformRepository.findTop1000By();
+            processGroups(groups);
+        } while ( !groups.isEmpty() );
     }
 
     private void processGroups(List<GroupToTransform> groups){
@@ -53,7 +56,7 @@ public class TransformerService {
                 Aenaflight2017 aenaflight2017Last = aenaflight2017List.get(aenaflight2017List.size()-1);
 
                 aenaflightDestination.setAdep(aenaflight2017Last.getDep_apt_code_iata());
-                aenaflightDestination.setAdes( aenaflight2017Last.getArr_apt_code_iata());
+                aenaflightDestination.setAdes(aenaflight2017Last.getArr_apt_code_iata());
                 aenaflightDestination.setFlight_code(aenaflight2017Last.getFlightIcaoCode());
                 aenaflightDestination.setFlight_number(aenaflight2017Last.getFlightNumber());
                 aenaflightDestination.setCarrier_code(aenaflight2017Last.getCarrier_icao_code());
@@ -78,6 +81,7 @@ public class TransformerService {
 
                 try {
                     aenaflightDestinationRepository.saveAndFlush(aenaflightDestination);
+                    long id = aenaflightDestination.getId();
                 } catch(Exception ex){
                     ex.printStackTrace();
                     break;
@@ -99,7 +103,7 @@ public class TransformerService {
     }
 
     private Date toDate(String date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy hh:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy hh:mm");
         try {
             return formatter.parse(date);
         } catch (ParseException e) {
