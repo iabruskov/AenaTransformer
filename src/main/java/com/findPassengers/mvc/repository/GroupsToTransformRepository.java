@@ -14,4 +14,6 @@ import java.util.List;
 public interface GroupsToTransformRepository  extends JpaRepository<GroupToTransform, Long> {
 
     List<GroupToTransform> findTop1000By();
+    List<GroupToTransform> findTop2000By();
+    List<GroupToTransform> findTop10000By();
 }
